@@ -1,0 +1,87 @@
+{
+  "name": "sand-table",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/sand-table/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/sand-table",
+        "index": "apps/sand-table/src/index.html",
+        "baseHref": "/",
+        "main": "apps/sand-table/src/main.ts",
+        "tsConfig": "apps/sand-table/tsconfig.app.json",
+        "assets": [
+          "apps/sand-table/src/favicon.ico",
+          "apps/sand-table/src/assets"
+        ],
+        "styles": ["apps/sand-table/src/styles.less"],
+        "scripts": [],
+        "webpackConfig": "apps/sand-table/webpack.config.ts"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/sand-table/src/environments/environment.ts",
+              "with": "apps/sand-table/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "webpackConfig": "apps/sand-table/webpack.config.prod.ts"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/react:module-federation-dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "sand-table:build",
+        "hmr": true,
+        "port": 4201
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "sand-table:build:development"
+        },
+        "production": {
+          "buildTarget": "sand-table:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "buildTarget": "sand-table:build",
+        "watch": false,
+        "port": 4201
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "sand-table:build:development"
+        },
+        "production": {
+          "buildTarget": "sand-table:build:production"
+        }
+      }
+    }
+  }
+}
